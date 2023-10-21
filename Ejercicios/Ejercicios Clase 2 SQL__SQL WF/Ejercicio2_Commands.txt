@@ -1,0 +1,25 @@
+# BAJAMOS LA IMAGEN PARA EL EJERCICIO
+docker pull fedepineyro/edvai_postgres:v1
+
+# LEVANTAMOS UN CONTENEDOR A PARTIR DE DICHA IMAGEN
+docker run --name edvai_postgres -e POSTGRES_PASSWORD=edvai -d -p 5432:5432 fedepineyro/edvai_postgres:v1
+
+# SI EN NUESTRA MAQUINA YA TENEMOS UN POSTGRES LOCAL, QUE PUEDE GENERARNOS UN ERROR AL OCUPAR EL PUERTO ESTANDAR
+#   >> EN CASO DE ERROR DE POSTGRES: INTERACTUAR CON EL CONTENEDOR POR BASH
+	docker exec -it edvai_postgres bash
+
+	apt update
+	apt install nano
+	nano /var/lib/postgresql/pgdata/postgresql.conf
+
+	CTRL + W -> Para buscar la palabra port
+
+	Agregamos la linea: 
+	port = 5431
+
+	CTRL + O -> Para guardar cambios
+	
+	
+# DATABASE CREDENTIALS
+northwind
+edvai
