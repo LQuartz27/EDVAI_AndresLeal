@@ -8,3 +8,5 @@ fedepineyro/edvai_ubuntu:v6 /bin/bash -c "/home/hadoop/scripts/start-services.sh
 docker run --name edvai_hadoop -p 8081:8081 -p 8080:8080 -p 8088:8088 -p 9870:9870 -p 9868:9868 -p 9864:9864 -p 1527:1527 -p 10000:10000 -p 10002:10002 -p 50111:50111 -p 8010:8010 -p 9093:9093 -p 2181:2182 -it --restart unless-stopped fedepineyro/edvai_ubuntu:v6 /bin/bash -c "/home/hadoop/scripts/start-services.sh"
 
 docker exec -it edvai_hadoop bash
+
+Correr script con ./landing.sh
