@@ -1,0 +1,49 @@
+00:03:02.664,00:03:05.664
+Federico Piñeyro: pyspark
+
+00:08:21.614,00:08:24.614
+Federico Piñeyro: wget https://edvaibucket.blob.core.windows.net/data-engineer-edvai/yellow_tripdata_2021-01.csv\?sp\=r\&st\=2023-11-06T12:52:39Z\&se\=2025-11-06T20:52:39Z\&sv\=2022-11-02\&sr\=c\&sig\=J4Ddi2c7Ep23OhQLPisbYaerlH472iigPwc1%2FkG80EM%3D
+
+00:22:03.553,00:22:06.553
+Federico Piñeyro: df = spark.read.csv("/ingest/yellow_tripdata_2021-01.csv")
+
+00:22:51.720,00:22:54.720
+Federico Piñeyro: df.printSchema()
+
+00:24:06.364,00:24:09.364
+Federico Piñeyro: df = spark.read.option("header", "true")csv("/ingest/yellow_tripdata_2021-01.csv")
+
+00:24:26.058,00:24:29.058
+Federico Piñeyro: df = spark.read.option("header", "true").csv("/ingest/yellow_tripdata_2021-01.csv")
+
+00:29:36.245,00:29:39.245
+Federico Piñeyro: df.show(5)
+
+00:36:19.102,00:36:22.102
+Federico Piñeyro: df2 =  spark.sql("select cast(tpep_pickup_datetime as date), cast(passenger_count as integer), cast(trip_dis
+tance as float), cast(total_amount as float) from v_df")
+>>> df2.printSchema()
+
+00:56:47.299,00:56:50.299
+Federico Piñeyro: show databases;
+
+00:57:19.434,00:57:22.434
+Federico Piñeyro: use tripdata;
+
+00:57:42.724,00:57:45.724
+Federico Piñeyro: show tables;
+
+00:58:20.694,00:58:23.694
+Federico Piñeyro: select * from tripdata_table limit 10;
+
+01:03:59.275,01:04:02.275
+Federico Piñeyro: df2 = df.select(df.tpep_pickup_datetime, df.passenger_count, df.trip_distance, df.total_amount)
+
+01:05:25.878,01:05:28.878
+Federico Piñeyro: df2 = df.select(df.tpep_pickup_datetime.cast("date"), df.passenger_count.cast("integer"), df.trip_distance.cast("float"), df.total_amount.cast("float"))
+
+01:11:22.461,01:11:25.461
+Federico Piñeyro: from pyspark.sql.functions import sum, asc, desc
+
+01:12:39.468,01:12:42.468
+Federico Piñeyro: df4 = df3.groupBy(df3.tpep_pickup_datetime).agg(sum(df3.total_amount).alias("total")).sort(desc("total"))
