@@ -1,0 +1,83 @@
+
+# CREATING A NEW DATA BASE FOR THIS EXERCISE
+
+CREATE DATABASE IF NOT EXISTS tripdata_andres_leal_db;
+
+############################################################
+# 1 CREATING INTERNAL TABLES
+
+# 1.a
+
+CREATE TABLE IF NOT EXISTS tripdata_andres_leal_db.payments(vendorID INT, tpep_pickup_datetime TIMESTAMP, payment_type STRING, total_amount DOUBLE)
+COMMENT 'PAYMENTS TABLE'
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ',';
+
+# 1.b
+
+CREATE TABLE IF NOT EXISTS tripdata_andres_leal_db.passengers(tpep_pickup_datetime TIMESTAMP, passenger_count INT, total_amount DOUBLE)
+COMMENT 'PASSENGERS TABLE'
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','; 
+
+# 1.c
+
+CREATE TABLE IF NOT EXISTS tripdata_andres_leal_db.tolls(tpep_pickup_datetime TIMESTAMP, passenger_count INT, tolls_amount DOUBLE, total_amount DOUBLE)
+COMMENT 'TOLLS TABLE'
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','; 
+
+# 1.d
+
+CREATE TABLE IF NOT EXISTS tripdata_andres_leal_db.congestion(tpep_pickup_datetime TIMESTAMP, passenger_count INT, congestion_surcharge DOUBLE, total_amount DOUBLE)
+COMMENT 'CONGESTION TABLE'
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','; 
+
+# 1.e
+
+CREATE TABLE IF NOT EXISTS tripdata_andres_leal_db.distance(tpep_pickup_datetime TIMESTAMP, passenger_count INT, trip_distance DOUBLE, total_amount DOUBLE)
+COMMENT 'DISTANCE TABLE'
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','; 
+
+############################################################
+# 2 DESCRIBE TABLES
+# En Hive, hacer un ‘describe’ de las tablas passengers y distance
+
+# 2.1
+
+DESCRIBE FORMATTED passengers;
+
+# 2.2
+
+DESCRIBE FORMATTED distance;
+
+############################################################
+# 3 INGEST
+# Hacer ingest del file: Yellow_tripodata_2021-01.csv
+
+hdfs dfs -put yellow_tripdata_2021-01.csv /user/hadoop
+
+# No infer schema
+df = spark.read.options(header=True).csv("yellow_tripdata_2021-01.csv")
+
+# With infer schema
+df2 = spark.read.options(header=True, inferSchema=True).csv("yellow_tripdata_2021-01.csv")
+
+# Creating the dataframes of interest
+
+payments_df = df.select(col("VendorID").cast("int"), col("tpep_pickup_datetime").cast("timestamp"), col("payment_type").cast("int"), col("total_amount").cast("double") )
+
+passengers_df = df.select(col("tpep_pickup_datetime").cast("timestamp"), col("passenger_count").cast("int"), col("total_amount").cast("double") )
+
+tolls_df = df.select(col("tpep_pickup_datetime").cast("timestamp"), col("passenger_count").cast("int"), col("tolls_amount").cast("double"), col("total_amount").cast("double") )
+
+congestion_df = df.select( col("tpep_pickup_datetime").cast("timestamp"), col("passenger_count").cast("int"), col("congestion_surcharge").cast("double"), col("total_amount").cast("double") )
+
+distance_df = df.select( col("tpep_pickup_datetime").cast("timestamp"), col("passenger_count").cast("int"), col("trip_distance").cast("double"), col("total_amount").cast("double") )
+
+
+#################################################################################
+# FULL QUERIES AND PRINTS OF RESULTS CAN BE FOUND IN solucion_consultas_spark.py
+#################################################################################
