@@ -1,0 +1,45 @@
+##############################################################################################
+# 1 En Hive, crear la siguiente tabla (externa) en la base de datos tripdata:
+# airport_trips(tpep_pickup_datetime, airport_fee, payment_type, tolls_amount, total_amount)
+##############################################################################################
+
+CREATE EXTERNAL TABLE IF NOT EXISTS tripdata_andres_leal_db.airport_trips(tpep_pickup_datetime TIMESTAMP, airport_fee DOUBLE, payment_type INT, tolls_amount DOUBLE, total_amount DOUBLE)
+COMMENT 'AIRPORT TRIPS TABLE'
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','; 
+
+##############################################################################################
+# 2 En Hive, mostrar el esquema de airport_trips
+##############################################################################################
+
+DESCRIBE FORMATTED airport_trips;
+
+##############################################################################################
+# 3 Crear un archivo .bash que permita descargar los archivos mencionados abajo e ingestarlos en HDFS:
+##############################################################################################
+
+Yellow_tripdata_2021-01.parquet
+(https://edvaibucket.blob.core.windows.net/data-engineer-edvai/yellow_tripdata_2021-01.parquet\?sp\=r\&st\=2023-11-06T12:52:39Z\&se\=2025-11-06T20:52:39Z\&sv\=2022-11-02\&sr\=c\&sig\=J4Ddi2c7Ep23OhQLPisbYaerlH472iigPwc1%2FkG80EM%3D)
+
+Yellow_tripdata_2021-02.parquet
+(https://edvaibucket.blob.core.windows.net/data-engineer-edvai/yellow_tripdata_2021-02.csv\?sp\=r\&st\=2023-11-06T12:52:39Z\&se\=2025-11-06T20:52:39Z\&sv\=2022-11-02\&sr\=c\&sig\=J4Ddi2c7Ep23OhQLPisbYaerlH472iigPwc1%2FkG80EM%3D)
+(https://edvaibucket.blob.core.windows.net/data-engineer-edvai/yellow_tripdata_2021-02.parquet\?sp\=r\&st\=2023-11-06T12:52:39Z\&se\=2025-11-06T20:52:39Z\&sv\=2022-11-02\&sr\=c\&sig\=J4Ddi2c7Ep23OhQLPisbYaerlH472iigPwc1%2FkG80EM%3D)
+
+# 3.1 SHELL SCRIPT CREATION
+
+nano /home/hadoop/scripts/ingest_andresleal.sh
+
+  # >>  Then add the file content. > Ctrl + O > Enter > Ctrl + X
+
+# 3.2 Give permissions to execute script
+chmod 777 ingest.sh
+
+# 3.3 CREATE MY SPARK TRANSFORMATION SCRIPT
+
+nano /home/hadoop/scripts/transformation_andresleal.py
+
+# 3.4 CREATE MY DAG
+
+nano /home/hadoop/airflow/dags/ingest_transform_andresleal.py
+
+# 3.5 RUN THE DAG FROM AIRFLOW USER INTERFACE
