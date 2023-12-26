@@ -1,0 +1,66 @@
+#################################################################################
+# 1 CREATING A NEW DATA BASE FOR THIS EXERCISE
+#################################################################################
+
+CREATE DATABASE IF NOT EXISTS northwind_analytics;
+
+#################################################################################
+# 1.1 CREATING VIEWS IN northwind TO INGEST DATA FROM THOSE VIEWS INTO HDFS
+#################################################################################
+
+CREATE OR REPLACE VIEW clientes_vw 
+AS
+SELECT O.CUSTOMER_ID, C.COMPANY_NAME, SUM(OD.QUANTITY) AS PRODUCTOS_VENDIDOS
+FROM ORDERS O
+INNER JOIN ORDER_DETAILS OD 
+  ON O.ORDER_ID = OD.ORDER_ID 
+LEFT JOIN CUSTOMERS C 
+  ON O.CUSTOMER_ID = C.CUSTOMER_ID 
+GROUP BY O.CUSTOMER_ID, C.COMPANY_NAME
+ORDER BY 3 DESC;
+
+
+CREATE OR REPLACE VIEW envios_vw 
+AS
+SELECT O.ORDER_ID, cast(O.SHIPPED_DATE AS TEXT), C.COMPANY_NAME, C.phone 
+FROM ORDERS O
+LEFT JOIN CUSTOMERS C 
+  ON O.CUSTOMER_ID = C.CUSTOMER_ID;
+
+#################################################################################
+# 1.2 CREATING TARGET TABLES IN northwind_analytics TO INSERT PROCESSED DATA
+#################################################################################
+
+CREATE EXTERNAL TABLE IF NOT EXISTS northwind_analytics.products_sent(ORDER_ID INT, SHIPPED_DATE TIMESTAMP, COMPANY_NAME STRING, phone STRING, UNIT_PRICE_DISCOUNT DOUBLE, QUANTITY DOUBLE, TOTAL_PRICE DOUBLE)
+COMMENT 'products_sent ONLY LISTS ORDERS THAT HAD A DISCOUNT'
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','; 
+
+CREATE EXTERNAL TABLE IF NOT EXISTS northwind_analytics.products_sold(CUSTOMER_ID STRING, COMPANY_NAME STRING, PRODUCTOS_VENDIDOS INT)
+COMMENT 'products_sold CONTAINS THE LIST OF CLIENTS WITH A NUM OF PRODUCTS SOLD ABOVE THE AVG'
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','; 
+
+#################################################################################
+# 2, 3, 4 CREATING INGEST SCRIPTS TO SAVE DATA INTO HDFS USING sqoop
+#################################################################################
+
+Created files and provided execution permission:
+ - ingest_clientes.sh
+ - ingest_envios.sh
+ - ingest_order_details.sh
+
+#################################################################################
+# 5, 6 CREATING SPARK PROCESSING SCRIPTS TO FINALLY LOAD INTO HIVE
+#################################################################################
+
+Created files and provided execution permission:
+ - transform_load_clientes.py
+ - transform_envios_order_details.py
+
+#################################################################################
+# 7 CREATING THE AIRFLOW DAG TO ORCHESTRATE THE CREATED SCRIPTS
+#################################################################################
+
+Created files:
+ - ingest_transform_ejercicio9_andresleal.py
