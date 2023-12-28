@@ -1,0 +1,8 @@
+# CREATING A NEW EXTERNAL TABLE FOR THIS EXERCISE
+
+USE tripdata_andres_leal_db;
+
+CREATE EXTERNAL TABLE IF NOT EXISTS tripdata_andres_leal_db.titanic_transformed(passengerId INT, survived INT, pclass INT, name STRING, sex STRING, age INT, ticket STRING, fare DOUBLE, embarked STRING, sex_avg_age DOUBLE, cabin STRING)
+COMMENT 'Titanic dataset transformed'
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ';';
